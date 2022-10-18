@@ -5,10 +5,22 @@
   console.log(`Deploying contracts with the account: ${deployer.address}`);
   console.log(`Account balance: ${(await deployer.getBalance()).toString()}`);
 
-  // deploy
-  const contract = await ethers.getContractFactory("Spaces");
-  const ret = await contract.deploy();
-  console.log('deployed contract to', ret.address);
+  // deploy logic
+  async function deployContract(name) {
+    let contract = await ethers.getContractFactory(name);
+    const { address } = await contract.deploy();
+    console.log(`deployed[${name}]`, address);
+    return address;
+  }
+
+  // deploy all
+  const spacesAddr = await deployContract("Spaces");
+  const carsAddr = await deployContract("Cars");
+
+  // show the verify commands
+  console.log('VERIFY: wait a minute or so and then run:');
+  console.log(`npx hardhat verify ${spacesAddr}`);
+  console.log(`npx hardhat verify ${carsAddr}`);
 
 })()
   .catch(e => {
