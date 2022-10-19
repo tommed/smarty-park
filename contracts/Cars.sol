@@ -66,4 +66,8 @@ contract Cars {
     emit CarDisabledChanged(_regNumber, _disabled);
   }
 
+  function getCar(string memory _carID) public view returns (CarDetails memory) {
+    return cars[_carID];
+  }
+
 }

@@ -148,4 +148,8 @@ contract Spaces {
     emit SpaceRemoved(_id, space.locationWtw);
   }
 
+  function getSpace(string memory _spaceID) public view returns (ParkingSpace memory) {
+    return carPark[_spaceID];
+  }
+
 }

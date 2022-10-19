@@ -32,4 +32,5 @@ contract Rewards is ERC1155 {
   function rewardFirstTimeUse(address _to) public _ownerOnly {
     _mint(_to, REWARD_FIRST_USE, 1, "");
   }
+  
 }
