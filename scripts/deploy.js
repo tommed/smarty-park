@@ -16,11 +16,13 @@
   // deploy all
   const spacesAddr = await deployContract("Spaces");
   const carsAddr = await deployContract("Cars");
+  const rewardsAddr = await deployContract("Rewards");
 
   // show the verify commands
   console.log('VERIFY: wait a minute or so and then run:');
   console.log(`npx hardhat verify ${spacesAddr}`);
   console.log(`npx hardhat verify ${carsAddr}`);
+  console.log(`npx hardhat verify ${rewardsAddr}`);
 
 })()
   .catch(e => {
