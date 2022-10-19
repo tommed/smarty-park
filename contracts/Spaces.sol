@@ -5,6 +5,7 @@ contract Spaces {
 
   // owner / admin of contract
   address owner;
+  uint public costForRegistration = 8674167106557; // 865454873589090 wei ~= £1 • 8674167106557 wei ~= £0.01
 
   // this is our virtual, crowd-sourced car park!
   mapping(string => ParkingSpace) public carPark;
@@ -47,7 +48,7 @@ contract Spaces {
     string memory _locationHint,
     string memory _rules,
     uint _pricePerMinute)
-    public {
+    public payable {
     // find space with name
     ParkingSpace memory space = carPark[_id];
     // pre-guards
@@ -56,6 +57,14 @@ contract Spaces {
     require(bytes(_locationHint).length < 1000, 'HINT_TOO_LONG');
     require(bytes(_rules).length < 2000, 'RULES_TOO_LONG');
     require(_pricePerMinute > 0, 'PRICE_ZERO');
+
+    // transfer payment to contract owner
+    if (owner != msg.sender) {
+      require(msg.value == costForRegistration, 'REGISTRATION_FEE_NOT_SATISFIED');
+      (bool success, ) = payable(owner).call{value:msg.value}("");
+      require(success, 'PAYMENT_FAILED');
+    }
+    
     // set up new registration
     space.landlord = msg.sender;
     space.addedAt = block.timestamp;
@@ -150,6 +159,10 @@ contract Spaces {
 
   function getSpace(string memory _spaceID) public view returns (ParkingSpace memory) {
     return carPark[_spaceID];
+  }
+
+  function changeRegistrationCost(uint costInWei) public _ownerOnly {
+    costForRegistration = costInWei;
   }
 
 }

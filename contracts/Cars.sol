@@ -7,9 +7,10 @@ contract Cars {
 
   // Spaces private spaces;
   int16 public constant defaultScore = 100;
+  uint public costForRegistration = 8674167106557; // 865454873589090 wei ~= £1 • 8674167106557 wei ~= £0.01
 
   // owner of this contract
-  address public owner;
+  address owner;
 
   // registration of cars using smarty park
   mapping(string => CarDetails) public cars;
@@ -41,13 +42,18 @@ contract Cars {
   }
 
   // perform a new car registration
-  function registerCar(string memory _regNumber, string memory _nickname) public {
+  function registerCar(string memory _regNumber, string memory _nickname) public payable {
     CarDetails memory car = cars[_regNumber];
     int score = scores[_regNumber];
     int newScore = score + defaultScore;
     require(bytes(_regNumber).length > 5, 'REG_TOO_SHORT');
     require(bytes(_regNumber).length < 10, 'REG_TOO_LONG');
     require(car.owner == address(0), 'ALREADY_REGISTERED');
+    // pay for registration
+    require(msg.value == costForRegistration, 'COST_OF_REG_NOT_SATISFIED');
+    (bool success, ) = payable(owner).call{value: msg.value}("");
+    require(success, 'PAYMENT_NOT_SUCCESSFUL');
+    // now add details into the block
     car.addedAt = block.timestamp;
     car.owner = msg.sender;
     car.nickname = _nickname;
@@ -68,6 +74,10 @@ contract Cars {
 
   function getCar(string memory _carID) public view returns (CarDetails memory) {
     return cars[_carID];
+  }
+
+  function changeRegistrationCost(uint costInWei) public _ownerOnly {
+    costForRegistration = costInWei;
   }
 
 }

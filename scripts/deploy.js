@@ -28,7 +28,7 @@
   console.log(`npx hardhat verify ${spacesAddr}`);
   console.log(`npx hardhat verify ${carsAddr}`);
   console.log(`npx hardhat verify ${rewardsAddr}`);
-  console.log(`npx hardhat verify ${parkingAddr}`);
+  console.log(`npx hardhat verify ${parkingAddr} ${spacesAddr} ${carsAddr}`);
 
 })()
   .catch(e => {
